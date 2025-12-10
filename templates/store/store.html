@@ -106,25 +106,22 @@
                     <label>Min</label>
                     <!-- <input class="form-control" placeholder="$0" type="number"> -->
                     <select class="mr-2 form-control">
-                      <option value="0">$0</option>
-                      <option value="50">$50</option>
-                      <option value="100">$100</option>
-                      <option value="150">$150</option>
-                      <option value="200">$200</option>
-                      <option value="500">$500</option>
-                      <option value="1000">$1000</option>
+                      <option value="0">Rs. 100</option>
+                      <option value="50">Rs. 500</option>
+                      <option value="100">Rs. 1000</option>
+                      <option value="150">Rs. 1500</option>
+                      <option value="200">Rs. 2000</option>
+                      <option value="500">Rs. 2500</option>
                     </select>
                   </div>
                   <div class="form-group text-right col-md-6">
                     <label>Max</label>
                     <select class="mr-2 form-control">
-                      <option value="50">$50</option>
-                      <option value="100">$100</option>
-                      <option value="150">$150</option>
-                      <option value="200">$200</option>
-                      <option value="500">$500</option>
-                      <option value="1000">$1000</option>
-                      <option value="2000">$2000+</option>
+                      <option value="50">Rs. 500</option>
+                      <option value="100">Rs. 1000</option>
+                      <option value="150">Rs. 3000</option>
+                      <option value="200">Rs. 5000</option>
+                      <option value="500">Rs. 10000</option>
                     </select>
                   </div>
                 </div>
@@ -169,7 +166,11 @@
                   </div>
                   <!-- price-wrap.// -->
                 </div>
-                <a href="#" class="btn btn-block btn-success">Add to cart </a>
+                <a
+                  href="{{ product.get_url }}"
+                  class="btn btn-block btn-primary"
+                  >View Details
+                </a>
               </figcaption>
             </figure>
           </div>
@@ -177,19 +178,53 @@
           <!-- col.// -->
         </div>
         <!-- row end.// -->
-
-        <nav class="mt-4" aria-label="Page navigation sample">
-          <ul class="pagination">
+        <nav class="mt-4" aria-label="Page navigation">
+          {% if products.has_other_pages %}
+          <ul class="pagination justify-content-center">
+            <!-- Previous button -->
+            {% if products.has_previous %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ products.previous_page_number }}"
+                >Previous</a
+              >
+            </li>
+            {% else %}
             <li class="page-item disabled">
-              <a class="page-link" href="#">Previous</a>
+              <span class="page-link">Previous</span>
             </li>
+            {% endif %}
+
+            <!-- Page numbers -->
+            {% for i in products.paginator.page_range %}
+            <br />
+            {% if products.number == i %}
             <li class="page-item active">
-              <a class="page-link" href="#">1</a>
+              <span class="page-link">{{ i }}</span>
             </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endif %}
+            <br />
+            {% endfor %}
+
+            <!-- Next button -->
+            {% if products.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ products.next_page_number }}"
+                >Next</a
+              >
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Next</span>
+            </li>
+            {% endif %}
           </ul>
+          {% endif %}
         </nav>
       </main>
       <!-- col.// -->

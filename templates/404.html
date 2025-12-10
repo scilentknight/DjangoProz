@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<section class="section-content text-center py-5">
+  <div class="container">
+    <h1 class="display-1 text-danger">404</h1>
+    <h2 class="mb-3">Oops! Page Not Found</h2>
+    <p class="mb-4">
+      The page you are looking for might have been removed,<br />
+      had its name changed, or is temporarily unavailable.
+    </p>
+    <a href="{% url 'store' %}" class="btn btn-primary btn-lg">
+      Back to Home
+    </a>
+    <div class="mt-5">
+      <img
+        src="{% static 'images/misc/404-illustration.png' %}"
+        alt="404"
+        style="max-width: 300px"
+      />
+    </div>
+  </div>
+</section>
+{% endblock %}
