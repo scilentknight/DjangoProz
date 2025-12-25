@@ -33,7 +33,8 @@ class VariationManager(models.Manager):
 
 variation_category_choice = (
     ('color', 'color'),
-    ('size', 'size'),
+    ('size', 'size')
+    # ('brand', 'brand')
 )
     
 class Variation(models.Model):
