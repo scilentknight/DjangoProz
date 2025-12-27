@@ -11,14 +11,7 @@
           <div class="card border-0 shadow-sm p-4">
             <div class="card-body">
               <!-- Shopping Cart Icon -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="80"
-                height="80"
-                fill="#6c63ff"
-                class="bi bi-cart-x mb-3"
-                viewBox="0 0 16 16"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#6c63ff" class="bi bi-cart-x mb-3" viewBox="0 0 16 16">
                 <path
                   d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 6H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 14H4a.5.5 0 0 1-.49-.402L1.61 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5.5H13l1.25-5.5H3.14z"
                 />
@@ -30,17 +23,10 @@
 
               <!-- Message -->
               <h2 class="fw-bold mb-3">Your Shopping Cart is Empty</h2>
-              <p class="text-muted mb-4">
-                Looks like you haven’t added anything to your cart yet. Explore
-                our store and find something you love!
-              </p>
+              <p class="text-muted mb-4">Looks like you haven’t added anything to your cart yet. Explore our store and find something you love!</p>
 
               <!-- Button -->
-              <a
-                href="{% url 'store' %}"
-                class="btn btn-lg btn-primary rounded-pill px-4"
-                >Continue Shopping</a
-              >
+              <a href="{% url 'store' %}" class="btn btn-lg btn-primary rounded-pill px-4">Continue Shopping</a>
             </div>
           </div>
         </div>
@@ -68,24 +54,15 @@
                   <figure class="itemside align-items-center">
                     <div class="aside">
                       <a href="{{ cart_item.product.get_url }}">
-                        <img
-                          src="{{ cart_item.product.images.url }}"
-                          class="img-sm"
-                        />
+                        <img src="{{ cart_item.product.images.url }}" class="img-sm" />
                       </a>
                     </div>
                     <figcaption class="info">
-                      <a
-                        href="{{ cart_item.product.get_url }}"
-                        class="title text-dark"
-                      >
-                        {{ cart_item.product.product_name }}
-                      </a>
-                     <p class="text-muted small">
-                      {% for item in cart_item.variations.all %}
-                        {{ item.variation_category|capfirst }} : {{ item.variation_value|capfirst }}<br />
-                      {% endfor %}
-                    </p>
+                      <a href="{{ cart_item.product.get_url }}" class="title text-dark"> {{ cart_item.product.product_name }} </a>
+                      <p class="text-muted small">
+                        {% for item in cart_item.variations.all %} {{item.variation_category|capfirst }} : {{item.variation_value|capfirst }}<br />
+                        {% endfor %}
+                      </p>
                     </figcaption>
                   </figure>
                 </td>
@@ -93,11 +70,7 @@
                   <div class="col">
                     <div class="input-group input-spinner">
                       <div class="input-group-prepend">
-                        <a
-                          href="{% url 'remove_cart' cart_item.product.id cart_item.id %}"
-                          class="btn btn-light"
-                          type="button"
-                          id="button-plus">
+                        <a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="btn btn-light" type="button" id="button-plus">
                           <i class="fa fa-minus"></i>
                         </a>
                       </div>
@@ -106,10 +79,9 @@
 
                       <div class="input-group-append">
                         <form action="{% url 'add_cart' cart_item.product.id %}" method="POST">
-                          {% csrf_token %}
-                            {% for item in cart_item.variations.all %}
-                              <input type="hidden" name="{{ item.variation_category|lower}}" value="{{ item.variation_value|capfirst }}"/>
-                            {% endfor %}
+                          {% csrf_token %} {% for item in cart_item.variations.all %}
+                          <input type="hidden" name="{{ item.variation_category|lower}}" value="{{ item.variation_value|capfirst }}" />
+                          {% endfor %}
                           <button class="btn btn-light" type="submit" id="button-minus">
                             <i class="fa fa-plus"></i>
                           </button>
@@ -121,17 +93,11 @@
                 <td>
                   <div class="price-wrap">
                     <var class="price">Rs. {{ cart_item.sub_total }}</var>
-                    <small class="text-muted"
-                      >Rs. {{ cart_item.product.price }}</small
-                    >
+                    <small class="text-muted">Rs. {{ cart_item.product.price }}</small>
                   </div>
                 </td>
                 <td class="text-right">
-                  <a
-                    href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" onClick="return confirm('Are you sure you want to remove this item?')"
-                    class="btn btn-danger"
-                    >Remove</a
-                  >
+                  <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" onClick="return confirm('Are you sure you want to remove this item?')" class="btn btn-danger">Remove</a>
                 </td>
               </tr>
               {% endfor %}
@@ -160,20 +126,15 @@
             </dl>
             <hr />
             <p class="text-center mb-3">
-              <img
-                src="{% static './images/misc/payments.png' %}"
-                height="26"
-              />
-              {% comment %} <i class="fab fa-lg fa-cc-visa"></i>
+              <img src="{% static './images/misc/payments.png' %}" height="26" />
+              {% comment %}
+              <i class="fab fa-lg fa-cc-visa"></i>
               <i class="fab fa-lg fa-cc-paypal"></i>
-              <i class="fab fa-lg fa-cc-mastercard"></i> {% endcomment %}
+              <i class="fab fa-lg fa-cc-mastercard"></i>
+              {% endcomment %}
             </p>
-            <a href="./place-order.html" class="btn btn-primary btn-block">
-              Checkout
-            </a>
-            <a href="{% url 'store' %}" class="btn btn-light btn-block"
-              >Continue Shopping</a
-            >
+            <a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
+            <a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
           </div>
           <!-- card-body.// -->
         </div>
