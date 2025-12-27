@@ -3,12 +3,17 @@ from django import forms
 from .models import Account
 
 
-class RegisterationForm(forms.ModelForm):
+class RegistrationForm(forms.ModelForm):
+    # Override email field to prevent Django's default unique check
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"placeholder": "Enter your email"}),
+        label="Email Address",
+    )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Enter Password"}),
+        widget=forms.PasswordInput(attrs={"placeholder": "Enter password"}),
     )
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"}),
+        widget=forms.PasswordInput(attrs={"placeholder": "Enter confirm password"}),
     )
 
     class Meta:
@@ -17,12 +22,22 @@ class RegisterationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["first_name"].widget.attrs["placeholder"] = "Enter First Name"
-        self.fields["last_name"].widget.attrs["placeholder"] = "Enter Last Name"
-        self.fields["email"].widget.attrs["placeholder"] = "Enter Email"
-        self.fields["phone_number"].widget.attrs["placeholder"] = "Enter Phone Number"
+        self.fields["first_name"].widget.attrs["placeholder"] = "Enter firstname"
+        self.fields["last_name"].widget.attrs["placeholder"] = "Enter lastname"
+        self.fields["email"].widget.attrs["placeholder"] = "Enter your email"
+        self.fields["phone_number"].widget.attrs["placeholder"] = "Enter phone number"
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        # Check if any active user exists with this email
+        if Account.objects.filter(email=email, is_active=True).exists():
+            raise forms.ValidationError(" with this email already exists.")
+
+        # If inactive user exists, allow registration (view will reuse it)
+        return email
 
     def clean(self):
         cleaned_data = super().clean()

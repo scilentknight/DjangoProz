@@ -36,7 +36,23 @@
       <div class="row align-items-center">
         <div class="col-lg-2 col-md-3 col-6">
           <a href="{% url 'home' %}" class="brand-wrap">
-            <img class="logo" src="{% static './images/iconic-logo.jpg' %}" style="width: 120px; height: auto" />
+            <img
+              src="{% static './images/logos.png' %}"
+              alt="ClothKart Logo"
+              style="
+                width: 60px;
+                height: auto;
+                padding: 5px;
+                background: #fff;
+                border-radius: 8px;
+                border: 2px solid #ff4d6d;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+                transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+                cursor: pointer;
+              "
+              onmouseover="this.style.transform='scale(1.1) rotate(-3deg)'; this.style.boxShadow='0 8px 15px rgba(255,77,109,0.5)'; this.style.filter='brightness(1.2)';"
+              onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'; this.style.filter='brightness(1)';"
+            />
           </a>
           <!-- brand-wrap.// -->
         </div>
@@ -71,14 +87,26 @@
         <!-- col.// -->
         <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
           <div class="d-flex justify-content-end mb-3 mb-lg-0">
+            {% if user.id is None %}
             <div class="widget-header">
               <small class="title text-muted">Welcome guest!</small>
               <div>
                 <a href="{% url 'login' %}">Sign in</a>
                 <span class="dark-transp"> | </span>
-                <a href="{% url 'register' %}"> Register</a>
+                <a href="{% url 'register' %}">Register</a>
               </div>
             </div>
+            {% else %}
+            <div class="widget-header">
+              <small class="title text-muted">Welcome {{ user.username }}!</small>
+              <div>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <span class="dark-transp"> | </span>
+                <a href="{% url 'logout' %}">Logout</a>
+              </div>
+            </div>
+            {% endif %}
+
             <a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
               <div class="icon icon-sm rounded-circle border">
                 <i class="fa fa-shopping-cart"></i>
