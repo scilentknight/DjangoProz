@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Order Not Found</h2>
+<p>Sorry, we could not find an order with order number {{ order_number }}.</p>
+<a href="{% url 'store:home' %}">Return to Home</a>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "base.html" %} {% block content %}
+
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #f4f6f9;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    height: 100vh;
+    background: linear-gradient(180deg, #111, #333);
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+    width: 250px;
+  }
+
+  .sidebar h2 {
+    font-weight: 600;
+    margin-bottom: 40px;
+  }
+
+  .sidebar a {
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: 0.3s;
+  }
+
+  .sidebar a:hover,
+  .sidebar a.active {
+    background: #ff4d6d;
+    color: white;
+  }
+
+  /* Main content */
+  .main {
+    margin-left: 260px;
+    padding: 30px;
+  }
+
+  /* Cards */
+  .stat-card {
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .bg-orders {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  }
+  .bg-wishlist {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+  }
+  .bg-wallet {
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+  }
+
+  /* Profile Card */
+  .profile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px; /* reduced from 25px */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* softer shadow */
+  }
+
+  .profile-card img {
+    width: 60px; /* reduced from 90px */
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+
+  .profile-card h6 {
+    font-size: 1.5rem; /* smaller text */
+  }
+
+  .profile-card p {
+    font-size: 1rem; /* smaller muted text */
+    margin-bottom: 8px;
+  }
+
+  /* Table */
+  .table thead {
+    background: #111;
+    color: white;
+  }
+
+  /* Wishlist images */
+  .wishlist img {
+    width: 100%;
+    border-radius: 12px;
+  }
+</style>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>ClothKart</h2>
+  <a href="#" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+  <a href="#"><i class="bi bi-bag-check"></i> My Orders</a>
+  <a href="#"><i class="bi bi-heart"></i> Wishlist</a>
+  {% comment %} <a href="#"><i class="bi bi-wallet2"></i> Wallet</a> {% endcomment %}
+  <a href="#"><i class="bi bi-gear"></i> Settings</a>
+  <a href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="profile-card text-center p-3">
+        <img src="https://i.pravatar.cc/150" alt="User" />
+        <h6 class="mb-1">{{ user.get_full_name|default:user.username }}</h6>
+        {% comment %}
+        <p class="text-muted small mb-2">Premium Member</p>
+        {% endcomment %}
+        <button class="btn btn-dark btn-sm">Edit Profile</button>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="stat-card bg-orders">
+            <h6>Total Orders</h6>
+            <h3>24</h3>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card bg-wishlist">
+            <h6>Wishlist Items</h6>
+            <h3>12</h3>
+          </div>
+        </div>
+        <div class="col-md-4">
+          {% comment %}
+          <div class="stat-card bg-wallet">
+            <h6>Wallet Balance</h6>
+            <h3>Rs. 320</h3>
+          </div>
+          {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Orders -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="mb-3">Recent Orders</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Product</th>
+            <th>Status</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#CK1023</td>
+            <td>Men Denim Jacket</td>
+            <td><span class="badge bg-success">Delivered</span></td>
+            <td>Rs. 1800</td>
+          </tr>
+          <tr>
+            <td>#CK1024</td>
+            <td>Women Summer Dress</td>
+            <td><span class="badge bg-warning">Shipped</span></td>
+            <td>Rs. 3500</td>
+          </tr>
+          <tr>
+            <td>#CK1025</td>
+            <td>Casual Sneakers</td>
+            <td><span class="badge bg-danger">Cancelled</span></td>
+            <td>Rs. 4500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Wishlist -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="mb-3">Wishlist</h5>
+      <div class="row wishlist g-4">
+        <div class="col-md-3">
+          <img src="https://source.unsplash.com/300x300/?tshirt" alt="" />
+        </div>
+        <div class="col-md-3">
+          <img src="https://source.unsplash.com/300x300/?jacket" alt="" />
+        </div>
+        <div class="col-md-3">
+          <img src="https://source.unsplash.com/300x300/?shoes" alt="" />
+        </div>
+        <div class="col-md-3">
+          <img src="https://source.unsplash.com/300x300/?dress" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}
