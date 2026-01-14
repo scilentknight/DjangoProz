@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="card">
-          <h5 class="card-header">Payment Method</h5>
+          <h5 class="card-header">Payment Options</h5>
           <div class="card-body">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="payment_method" id="khalti" value="Khalti" checked />
@@ -88,15 +88,20 @@
               <dd class="text-right text-dark b"><strong>Rs. {{grand_total}}</strong></dd>
             </dl>
             <hr />
+
+            {% comment %}
             <p class="text-center mb-3">
               <img src="{% static './images/misc/payments.png' %}" height="26" />
             </p>
+            {% endcomment %}
 
             <!-- Pay Now Button -->
             <button id="pay-btn" class="btn btn-primary btn-block">Pay Now</button>
           </div>
         </div>
+        {% comment %}
         <div class="alert alert-danger" role="alert"><b>Please Note: </b>This is a demo website. Do not try to make real payments.</div>
+        {% endcomment %}
       </aside>
     </div>
   </div>

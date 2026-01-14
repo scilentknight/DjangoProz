@@ -6,6 +6,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarTop4">
+        {% comment %}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item dropdown">
             <a href="#" class="nav-link"> English </a>
@@ -14,14 +15,14 @@
             <a href="#" class="nav-link"> USD </a>
           </li>
         </ul>
+        {% endcomment %}
         <ul class="navbar-nav">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=scilentknight512@gmail.com" target="_blank" class="nav-link"> <i class="fa fa-envelope"></i> Email </a>
           <li>
-            <a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a>
+            <a href="tel:+9779861252006" class="nav-link"> <i class="fa fa-phone"></i> Call us </a>
           </li>
         </ul>
+
         <!-- list-inline //  -->
       </div>
       <!-- navbar-collapse .// -->
@@ -96,7 +97,7 @@
             </div>
             {% else %}
             <div class="widget-header">
-              <small class="title text-muted">Welcome {{ user.username }}!</small>
+              <small class="title text-muted">Welcome {{ user.first_name }}!</small>
               <div>
                 <a href="{% url 'dashboard' %}">Dashboard</a>
                 <span class="dark-transp"> | </span>

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Remove Terminal server run warning
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -24,11 +25,16 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "yqr&m(!20au8u6ujh8#h(f_23iwx6&zrcg#a(o2z@m3bty!%gi"
+# SECRET_KEY = "yqr&m(!20au8u6ujh8#h(f_23iwx6&zrcg#a(o2z@m3bty!%gi"
+
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = []
+# DEBUG = True
+# ALLOWED_HOSTS = []
+
+DEBUG = config('DEBUG', default=True, cast=bool) # True
+# ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -147,10 +153,10 @@ MESSAGE_TAGS = {
 
 
 # SMTP CONFIGURATION
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "scilentknight512@gmail.com"
-EMAIL_HOST_PASSWORD = "rolptwjhshyeahma"
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
