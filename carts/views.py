@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem
 from store.models import Product, Variation
 from django.http import HttpResponse
+from store.recommendations import get_apriori_recommendations
 
 # Create your views here.
 
@@ -163,8 +164,8 @@ def remove_cart(request, product_id, cart_item_id):
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
             cart_item.save()
-        else:
-            cart_item.delete()
+        # else:
+        #     cart_item.delete()
     except:
         pass
     return redirect("cart")
@@ -199,12 +200,16 @@ def cart(request, total=0, quantity=0, cart_items=None):
     except ObjectDoesNotExist:
         pass  # just ignore
 
+    cart_product_ids = cart_items.values_list('product_id', flat=True)
+    recommended_products = get_apriori_recommendations(cart_product_ids)
+
     context = {
         "total": total,
         "quantity": quantity,
         "cart_items": cart_items,
         "tax": tax,
         "grand_total": grand_total,
+        "recommended_products": recommended_products,  # NEW
     }
     return render(request, "store/cart.html", context)
 

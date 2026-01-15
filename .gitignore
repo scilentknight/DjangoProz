@@ -1,4 +1,5 @@
 .vscode/
-env/
 /secrets.py
 .env
+venv/
+__pycache__/

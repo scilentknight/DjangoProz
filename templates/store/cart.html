@@ -104,6 +104,26 @@
             </tbody>
           </table>
         </div>
+
+        {% comment %} Product Recommendation Apriori Algorithm {% endcomment %} 
+        {% if recommended_products %}
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5>Recommended for you</h5>
+            <div class="row">
+              {% for product in recommended_products %}
+              <div class="col-4">
+                <a href="{{ product.get_url }}">
+                  <img src="{{ product.images.url }}" class="img-fluid" />
+                  <p class="text-center">{{ product.product_name }}</p>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
         <!-- card.// -->
       </aside>
       <!-- col.// -->
@@ -126,8 +146,7 @@
             </dl>
             <hr />
             <p class="text-center mb-3">
-              {% comment %} <img src="{% static './images/misc/payments.png' %}" height="26" /> {% endcomment %}
-              {% comment %}
+              {% comment %} <img src="{% static './images/misc/payments.png' %}" height="26" /> {% endcomment %} {% comment %}
               <i class="fab fa-lg fa-cc-visa"></i>
               <i class="fab fa-lg fa-cc-paypal"></i>
               <i class="fab fa-lg fa-cc-mastercard"></i>
