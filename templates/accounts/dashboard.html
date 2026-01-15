@@ -5,42 +5,179 @@
   <div class="container">
     <div class="row">
       {% include 'includes/dashboard_sidebar.html' %}
+
       <main class="col-md-9">
-        <article class="card">
-          <header class="card-header">
-            <strong class="d-inline-block mr-3">Logged in as:</strong>
-            <span>{{user.full_name}}</span>
-          </header>
+        <!-- ===== USER STATS ===== -->
+        <article class="card mb-4">
+          <header class="card-header">Logged in as: <strong>{{ user.full_name }}</strong></header>
+
           <div class="card-body">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="card" style="text-align: center">
-                  <div class="card-body">
-                    <h5 class="card-title">Total Orders</h5>
-                    <h4>{{orders_count}}</h4>
-                    <a href="{% url 'my_orders' %}">View Orders</a>
-                  </div>
+            <div class="row text-center align-items-stretch">
+              <!-- Total Orders -->
+              <div class="col-md-4 mb-2">
+                <div class="card h-100 p-3 d-flex flex-column justify-content-center">
+                  <h6 class="text-muted">Total Orders</h6>
+                  <h3 id="total-orders">0</h3>
+                  <a href="{% url 'my_orders' %}">View Orders</a>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="card" style="text-align: center">
-                  <div class="card-body">
-                    <img src="{{userprofile.profile_picture.url}}" alt="User Profile Picture" width="50" height="50" style="border-radius: 50%" />
-                    <p class="mb-0">{{user.full_name}}</p>
-                    <p>{{user.phone_number}}</p>
-                  </div>
+
+              <!-- Total Spent -->
+              <div class="col-md-4 mb-2">
+                <div class="card h-100 p-3 d-flex flex-column justify-content-center">
+                  <h6 class="text-muted">Total Spent</h6>
+                  <h3 id="total-spent">Rs 0.00</h3>
+                </div>
+              </div>
+
+              <!-- Profile -->
+              <div class="col-md-4 mb-2">
+                <div class="card h-100 p-3 d-flex flex-column justify-content-center align-items-center">
+                  <img src="{{ userprofile.profile_picture.url }}" class="rounded-circle mb-2" width="60" height="60" alt="Profile" />
+                  <strong>{{ user.full_name }}</strong>
+                  <small>{{ user.phone_number }}</small>
                 </div>
               </div>
             </div>
-            <!-- row.// -->
           </div>
-          <!-- card-body .// -->
         </article>
-        <!-- order-group.// -->
+
+        <!-- ===== CHART ===== -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="mb-3">Orders Summary</h5>
+
+            <!-- Filters -->
+            <form id="chart-form" class="form-inline mb-3">
+              <label class="mr-2">Period:</label>
+
+              <select id="period" class="form-control mr-2">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="custom">Custom</option>
+              </select>
+
+              <input type="date" id="start_date" class="form-control mr-2" />
+              <input type="date" id="end_date" class="form-control mr-2" />
+
+              <button class="btn btn-primary">Show</button>
+            </form>
+
+            <!-- Chart container (controls width) -->
+            <div style="max-width: 100%; height: 360px">
+              <canvas id="ordersChart" height="280"></canvas>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
-    <!-- row.// -->
   </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById("ordersChart").getContext("2d");
+  let ordersChart = null;
+
+  function fetchChartData() {
+    const period = document.getElementById("period").value;
+    const start = document.getElementById("start_date").value;
+    const end = document.getElementById("end_date").value;
+
+    fetch(`/accounts/dashboard_data/?period=${period}&start_date=${start}&end_date=${end}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Totals
+        const totalOrders = data.total_orders.reduce((a, b) => a + b, 0);
+        const totalSpent = data.total_spent.reduce((a, b) => a + b, 0);
+
+        document.getElementById("total-orders").innerText = totalOrders;
+        document.getElementById("total-spent").innerText = "Rs " + totalSpent.toFixed(2);
+
+        if (ordersChart) ordersChart.destroy();
+
+        ordersChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: "Orders",
+                data: data.total_orders,
+                backgroundColor: "rgba(54,162,235,0.85)",
+                yAxisID: "yOrders",
+              },
+              {
+                label: "Spent (Rs)",
+                data: data.total_spent,
+                backgroundColor: "rgba(255,99,132,0.85)",
+                yAxisID: "ySpent",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            categoryPercentage: 0.5,
+            barPercentage: 0.8,
+            interaction: {
+              mode: "index",
+              intersect: false,
+            },
+            interaction: {
+              mode: "nearest", // only the nearest bar
+              intersect: true, // must hover directly on a bar
+            },
+            plugins: {
+              legend: { position: "top" },
+              tooltip: {
+                callbacks: {
+                  label: function (ctx) {
+                    if (ctx.dataset.label === "Spent (Rs)") {
+                      return "Total Spent: Rs " + ctx.raw.toLocaleString();
+                    }
+                    if (ctx.dataset.label === "Orders") {
+                      return "Total Orders: " + ctx.raw.toLocaleString();
+                    }
+                    return ctx.raw;
+                  },
+                },
+              },
+            },
+
+            scales: {
+              yOrders: {
+                beginAtZero: true,
+                position: "left",
+                title: { display: true, text: "Orders" },
+                ticks: {
+                  stepSize: 1, // show every integer
+                },
+                suggestedMax: Math.max(...data.total_orders) + 3, // add 3 above max
+              },
+              ySpent: {
+                beginAtZero: true,
+                position: "right",
+                grid: { drawOnChartArea: false },
+                title: { display: true, text: "Spent (Rs)" },
+                ticks: {
+                  stepSize: 5000, // set this to whatever step you want
+                },
+                suggestedMax: Math.max(...data.total_spent) + 10000, // optional padding
+              },
+            },
+          },
+        });
+      });
+  }
+
+  fetchChartData();
+
+  document.getElementById("chart-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    fetchChartData();
+  });
+</script>
 
 {% endblock %}

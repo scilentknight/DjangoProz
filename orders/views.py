@@ -10,6 +10,8 @@ import datetime
 import json
 import requests
 
+# Create your views here.
+
 # =========================
 # KHALTI CONFIG
 # =========================

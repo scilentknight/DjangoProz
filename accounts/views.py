@@ -1,3 +1,7 @@
+import matplotlib
+matplotlib.use('Agg')  # Force non-GUI backend for server-side rendering
+import matplotlib.pyplot as plt
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistrationForm, UserForm, UserProfileForm
 from .models import Account, UserProfile
@@ -5,6 +9,13 @@ from orders.models import Order, OrderProduct
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+
+# # Dashboard Summary
+from django.http import JsonResponse
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
+
+# Create your views here.
 
 # Verification email
 from django.contrib.sites.shortcuts import get_current_site
@@ -165,13 +176,61 @@ def activate(request, uidb64, token):
 def dashboard(request):
     orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
     orders_count = orders.count()
-
     userprofile = UserProfile.objects.get(user_id=request.user.id)
+
+    # Generate chart
+    # chart_uri = dashboard_charts(request)
+
     context = {
         'orders_count': orders_count,
         'userprofile': userprofile,
+        # 'chart': chart_uri,
     }
     return render(request, 'accounts/dashboard.html', context)
+
+# Dashboard Summary
+@login_required(login_url='login')
+def dashboard_data(request):
+    user = request.user
+    period = request.GET.get('period', 'daily')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    orders = Order.objects.filter(user=user, is_ordered=True)
+
+    # Filter custom date range
+    if start_date and end_date:
+        orders = orders.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
+
+    # Annotate by period
+    if period == 'daily':
+        orders = orders.annotate(period=TruncDay('created_at')).values('period')
+    elif period == 'weekly':
+        orders = orders.annotate(period=TruncWeek('created_at')).values('period')
+    elif period == 'monthly':
+        orders = orders.annotate(period=TruncMonth('created_at')).values('period')
+    else:
+        # fallback to daily
+        orders = orders.annotate(period=TruncDay('created_at')).values('period')
+
+    summary = orders.annotate(
+        total_orders=Count('id'),
+        total_spent=Sum('order_total')
+    ).order_by('period')
+
+    # Format data for chart
+    labels = [s['period'].strftime('%d %b %Y') for s in summary]
+    total_orders = [s['total_orders'] for s in summary]
+    total_spent = [float(s['total_spent']) for s in summary]
+
+    return JsonResponse({
+        'labels': labels,
+        'total_orders': total_orders,
+        'total_spent': total_spent,
+    })
+
+
+
 
 
 def forgotPassword(request):
