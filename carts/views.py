@@ -182,7 +182,7 @@ def remove_cart_item(request, product_id, cart_item_id):
     cart_item.delete()
     return redirect('cart')
 
-
+# Apriori Algorithm
 def cart(request, total=0, quantity=0, cart_items=None):
     try:
         tax = 0
@@ -209,7 +209,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         "cart_items": cart_items,
         "tax": tax,
         "grand_total": grand_total,
-        "recommended_products": recommended_products,  # NEW
+        "recommended_products": recommended_products,  # Apriory Algorithm
     }
     return render(request, "store/cart.html", context)
 
