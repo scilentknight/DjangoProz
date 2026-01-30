@@ -5,7 +5,7 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarTop4">
+      <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarTop4">
         {% comment %}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item dropdown">
@@ -46,11 +46,22 @@
                 border-radius: 8px;
                 border: 2px solid #ff4d6d;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-                transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+                transition:
+                  transform 0.3s ease,
+                  box-shadow 0.3s ease,
+                  filter 0.3s ease;
                 cursor: pointer;
               "
-              onmouseover="this.style.transform='scale(1.1) rotate(-3deg)'; this.style.boxShadow='0 8px 15px rgba(255,77,109,0.5)'; this.style.filter='brightness(1.2)';"
-              onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.15)'; this.style.filter='brightness(1)';"
+              onmouseover="
+                this.style.transform = 'scale(1.1) rotate(-3deg)';
+                this.style.boxShadow = '0 8px 15px rgba(255,77,109,0.5)';
+                this.style.filter = 'brightness(1.2)';
+              "
+              onmouseout="
+                this.style.transform = 'scale(1) rotate(0deg)';
+                this.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
+                this.style.filter = 'brightness(1)';
+              "
             />
           </a>
           <!-- brand-wrap.// -->
